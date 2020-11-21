@@ -1,0 +1,34 @@
+version: '3'
+
+volumes:
+  nextcloud:
+  db:
+
+services:
+  db:
+    image: linuxserver/mariadb
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_USER=nextcloud_user
+      - MYSQL_DATABASE=nextcloud_db
+      - MYSQL_PASSWORD=mynormalpwd
+      - MYSQL_ROOT_PASSWORD=myrootpwd
+    networks:
+      - backend
+
+  app:
+    image: nextcloud
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    volumes:
+      - nextcloud:/var/www/html
+    networks:
+      - backend
+      - frontend
+
+networks:
+  backend:
+  frontend:
